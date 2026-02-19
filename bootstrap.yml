@@ -1,0 +1,37 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Install Updates (Rocky)
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "Rocky"
+
+  - name: Install Updates (Ubuntu)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Create Ansible User
+    user:
+      name: ansible
+
+  - name: Add SSH key for Ansible User
+    authorized_key:
+      user: ansible
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDYbJlJWHAcd2lFlQevzdRjizbSVTFVMsPdfGRpYL+k20s/RmzckIg48B1CgztxyWE3wqHifBvJJ6NRZX8D3Kb3OwdkYR7cEatrqH1ibkJMMxKnAOPDVKu/FrvOodWV3Wcj/fcxoF09x50A23ZZXhOL429UBlTt6x86oOzeynroP89ky+mc0yPFa4mMT09D6FQWBt15ur0AQ3gHHdNBaa0zO041Jy8LXDrtWA2QSSQBqib9+4u1MuTM9Sn0YQN62HemZ2erw4+SifIupyfTTLeZ7FkzW5pTtnJEfTdugITGqZtimULxtjPHVrvAx9OypJNV83adZUHLdwEa0DEwbraKZCPULAy1W9VlIN/R9xc9pEJH4rPdI+bdcktC3sWQR8w7ZLFNLz6g9wlzaCaVoIyy9hkx3e48ItHWUQc7Ktw7gjdRC/PfG+gaDSJzRhTI2GfCZtI81E5BJ9y1qPzFe7L1Q5RqMo9nq8XqKBUeixgWXQyNHhpcSnegnSEhOazHSU0= cj@ansible02"
+
+  - name: Add sudoers file for Ansible
+    copy:
+      src: sudoers_ansible
+      dest: /etc/sudoers.d/ansible
+      owner: root
+      group: root
+      mode: 0440
