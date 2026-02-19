@@ -1,0 +1,3 @@
+[linux]
+dhcp02 ansible_host=10.5.40.10
+pdhcp07 ansible_host=10.5.15.2
