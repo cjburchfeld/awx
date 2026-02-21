@@ -1,3 +1,11 @@
 [linux]
 dhcp02 ansible_host=10.5.40.10
 pdhcp07 ansible_host=10.5.15.2
+db02 ansible_host=10.5.40.61
+arrserver01 ansible_host=10.5.40.46
+pdocker06 ansible_host=10.5.40.203
+
+[twingate]
+ptwingate03 ansible_host=10.5.40.92
+ptwingate04 ansible_host=10.5.40.236
+
