@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  
+  tasks:
+
+  - name: Create user 'cj'
+    ansible.builtin.user:
+      name: "{{ new_username }}"
+      comment: "{{ new_name }}"
+      shell: /bin/bash
+      groups: wheel
+      create_home: yes
+      password: "{{ new_password | password_hash('sha512') }}"
+      state: present
+      update_password: on_create
+
+  
