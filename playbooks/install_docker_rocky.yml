@@ -22,6 +22,6 @@
 
     - name: Add CJ to docker Group
       user:
-	      name: 'cj'
+        name: 'cj'
         groups: docker
         append: yes
