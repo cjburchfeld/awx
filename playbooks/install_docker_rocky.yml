@@ -5,13 +5,6 @@
 
   tasks:
 
-    - name: Add the Docker Rocky Repo
-      ansible.builtin.yum_repository:
-        name: docker-ce
-        description: Docker CE Repo
-        baseurl: https://download.docker.com/linux/centos/docker-ce.repo
-        enabled: yes
-
     - name: Install Docker
       ansible.builtin.package:
         name:
