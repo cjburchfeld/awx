@@ -1,10 +1,23 @@
 [linux]
-dhcp02 ansible_host=10.5.40.10
-pdhcp07 ansible_host=10.5.15.2
 #arrserver01 ansible_host=10.5.40.46
 pdocker06 ansible_host=10.5.40.203
 #pdns02 ansible_host=10.5.40.15
+pdocker06 ansible_host=10.5.40.203 ansible_user=root ansible_pass=9mmlug3r
+pjellyfin01 ansible_host=10.5.40.220 ansible_become_user=root ansible_become_pass=9mmlug3r
+pzabbix01 ansible_host=10.5.40.224 ansible_become_user=root ansible_become_pass=9mmlug3r
+zabproxy01 ansible_host=10.5.40.64
+zabproxy02 ansible_host=10.5.40.53
+weather02 ansible_host=10.5.40.38
+pjump01 ansible_host=10.5.40.230
 
 [twingate]
 ptwingate04 ansible_host=10.5.40.236
 ptwingate05 ansible_host=10.5.40.74
+
+[pbx]
+pbx02 ansible_host=10.5.100.102
+
+[dhcp]
+dhcp02 ansible_host=10.5.40.10
+pdhcp07 ansible_host=10.5.15.2
+pdhcp04 ansible_host=10.5.100.2
