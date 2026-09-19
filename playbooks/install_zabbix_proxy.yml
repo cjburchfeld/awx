@@ -1,0 +1,77 @@
+---
+- name: Install and Configure Zabbix Proxy 7.4
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+
+    - name: Install Zabbix 7.4 Repository
+      ansible.builtin.dnf:
+        name: "https://repo.zabbix.com/zabbix/7.4/release/rocky/10/noarch/zabbix-release-latest-7.4.el10.noarch.rpm"
+        state: present
+        disable_gpg_check: false
+
+    - name: Clean DNF Metadata
+      ansible.builtin.dnf:
+        cmd: dnf clean all
+      changed_when: false
+
+    - name: Install Zabbix Proxy packages
+      ansible.builtin.dnf:
+        name:
+          - zabbix-proxy-mysql
+          - zabbix-sql-scripts
+        state: present
+
+    - name: Import Zabbix Proxy database schema
+      ansible.builtin.shell:
+        cmd: >
+          cat /usr/share/zabbix-sql-scripts/mysql/proxy.sql |
+          mysql
+          -uzabproxy_snmp
+          -p'{{ mysql_password }}'
+          '{{ zabbix_database }}'
+          -h '{{ mysql_host }}'
+
+    - name: Configure Zabbix Proxy server
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_proxy.conf
+        regexp: '^Server'
+        line: "Server={{ zabbix_server }}"
+        create: false
+      notify: Restart Zabbix Proxy
+    
+    - name: Configure Zabbix Proxy hostname
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_proxy.conf
+        regexp: '^Hostname='
+        line: "Hostname= {{ zabbix_proxy_hostname }}"
+        create: false
+
+    - name: Configure Zabbix Proxy database name
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_proxy.conf
+        regexp: '^DBName='
+        line: "DBName={{ zabbix_database }}"
+        create: false
+
+    - name: Configure Zabbix Proxy database password
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_proxy.conf
+        regexp: '^DBPassword='
+        line: "DBPassword={{ mysql_password }}"
+        create: false       
+
+    - name: Enable and Start Zabbix Proxy
+      ansible.builtin.systemd:
+        name: zabbix-proxy
+        enabled: true
+        state: started
+
+  handlers:
+
+    - name: Restart Zabbix Proxy
+      ansible.builtin.systemd:
+        name: zabbix-proxy
+        state: restarted  
