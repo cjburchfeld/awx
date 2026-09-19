@@ -29,8 +29,8 @@
         cmd: >
           cat /usr/share/zabbix-sql-scripts/mysql/proxy.sql |
           mysql
-          -uzabproxy_snmp
-          -p'{{ mysql_password }}'
+          -u'{{ zabbix_database_username }}'
+          -p'{{ zabbix_database_password }}'
           '{{ zabbix_database }}'
           -h '{{ mysql_host }}'
 
@@ -56,11 +56,18 @@
         line: "DBName={{ zabbix_database }}"
         create: false
 
+    - name: Configure Zabbix Proxy database username
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_proxy.conf
+        regexp: '^DBName='
+        line: "DBName={{ zabbix_database_username }}"
+        create: false
+
     - name: Configure Zabbix Proxy database password
       ansible.builtin.lineinfile:
         path: /etc/zabbix/zabbix_proxy.conf
         regexp: '^DBPassword='
-        line: "DBPassword={{ mysql_password }}"
+        line: "DBPassword={{ zabbix_database_password }}"
         create: false       
 
     - name: Enable and Start Zabbix Proxy
