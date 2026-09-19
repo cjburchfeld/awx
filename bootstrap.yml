@@ -27,7 +27,6 @@
     authorized_key:
       user: ansible
       key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFAJI/H7P1eVjhuvcGvGFV4MlR6PNkJQozAfs+lDEY94 ansible"
-"
 
   - name: Add sudoers file for Ansible
     copy:
