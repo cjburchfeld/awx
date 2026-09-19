@@ -46,7 +46,7 @@
           - "--mkhomedir"
           - "--unattended"
       when: not ipa_config.stat.exists
-      no_log: true
+      no_log: false
 
     - name: Enable and start SSSD
       ansible.builtin.systemd:
