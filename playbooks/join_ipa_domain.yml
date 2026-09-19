@@ -1,0 +1,61 @@
+---
+- name: Install and configure FreeIPA client
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    ipa_domain: "home.burchlabs.us"
+    ipa_realm: "HOME.BURCHLABS.US"
+    ipa_server: "pipa01.home.burchlabs.us"
+
+    # Credentials for the IPA enrollment account
+    ipa_principal: "admin"
+    ipa_password: "9mmlug3r"
+
+  tasks:
+
+    - name: Install IPA client packages
+      ansible.builtin.dnf:
+        name:
+          - ipa-client
+          - krb5-workstation
+          - sssd
+          - oddjob
+          - oddjob-mkhomedir
+        state: present
+
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}.{{ ipa_domain }}"
+
+    - name: Check if system is already joined to IPA
+      ansible.builtin.stat:
+        path: /etc/ipa/default.conf
+      register: ipa_config
+
+    - name: Join system to FreeIPA domain
+      ansible.builtin.command:
+        argv:
+          - ipa-client-install
+          - "--domain={{ ipa_domain }}"
+          - "--realm={{ ipa_realm }}"
+          - "--server={{ ipa_server }}"
+          - "--principal={{ ipa_principal }}"
+          - "--password={{ ipa_password }}"
+          - "--mkhomedir"
+          - "--unattended"
+      when: not ipa_config.stat.exists
+      no_log: true
+
+    - name: Enable and start SSSD
+      ansible.builtin.systemd:
+        name: sssd
+        enabled: true
+        state: started
+
+    - name: Enable and start oddjobd
+      ansible.builtin.systemd:
+        name: oddjobd
+        enabled: true
+        state: started
