@@ -45,6 +45,7 @@
           - "--password={{ ipa_password }}"
           - "--mkhomedir"
           - "--unattended"
+          - "--no-ntp"
       when: not ipa_config.stat.exists
       no_log: false
 
