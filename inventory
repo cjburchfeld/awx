@@ -1,5 +1,8 @@
 [linux]
 pzproxy01 ansible_host=10.5.40.141
+pdb01 ansible_host=10.5.40.84
+pzproxy02 ansible_host=10.5.40.142
+pzabbix01 ansible_host=10.5.40.23
 
 [twingate]
 ptwingate04 ansible_host=10.5.40.236
