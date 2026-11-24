@@ -20,6 +20,4 @@ dhcp02 ansible_host=10.5.40.10
 pdhcp07 ansible_host=10.5.15.2
 pdhcp04 ansible_host=10.5.100.2
 dhcp03 ansible_host=10.5.40.173
-
-
-
+pdesktop01 ansible_host=10.5.50.210
